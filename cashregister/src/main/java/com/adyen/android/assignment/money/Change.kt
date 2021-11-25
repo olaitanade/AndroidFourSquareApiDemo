@@ -5,7 +5,7 @@ import java.util.TreeMap
 class Change {
     private val map by lazy {
         TreeMap<MonetaryElement, Int>(Comparator { lhs, rhs ->
-            lhs.minorValue.compareTo(rhs.minorValue)
+            rhs.minorValue.compareTo(lhs.minorValue)
         })
     }
 
@@ -26,6 +26,20 @@ class Change {
 
     fun remove(element: MonetaryElement, count: Int): Change {
         return modify(element, -count)
+    }
+
+    fun clear() = map.clear()
+
+    fun addChange(amountPaid:Change) {
+        amountPaid.getElements().forEach {
+            add(it,amountPaid.getCount(it))
+        }
+    }
+
+    fun removeChange(amountPaid:Change) {
+        amountPaid.getElements().forEach {
+            remove(it,amountPaid.getCount(it))
+        }
     }
 
     private fun modify(element: MonetaryElement, count: Int): Change {

@@ -48,6 +48,7 @@ class ChangeTest {
             .add(Coin.TWENTY_CENT, 1)
             .add(Coin.FIFTY_CENT, 2)
             .add(Bill.ONE_HUNDRED_EURO, 1)
+        println(actual)
         assertNotEquals(expected, actual)
     }
 }
