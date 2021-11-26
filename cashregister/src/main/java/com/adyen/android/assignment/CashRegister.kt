@@ -44,6 +44,7 @@ class CashRegister(private val change: Change) {
                     if(totalChangeToGive>=it.minorValue){
                         val changeCountPossible = (totalChangeToGive / it.minorValue).toInt()
                         val changeCountAvailable = change.getCount(it)
+
                         val totalChangeCount: Int =
                             if (changeCountAvailable <= changeCountPossible) changeCountAvailable else changeCountPossible
                         val totalChangeAmount: Long = (totalChangeCount * it.minorValue).toLong()

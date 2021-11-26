@@ -1,6 +1,11 @@
-apply plugin: "com.android.application"
-apply plugin: "kotlin-android"
-apply plugin: "kotlin-android-extensions"
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
 
 if (!file("local.gradle").exists()) {
     exec {
@@ -12,16 +17,16 @@ if (!file("local.gradle").exists()) {
 apply from: "local.gradle"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.adyen.android.assignment"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "FOURSQUARE_BASE_URL", "\"https://api.foursquare.com/v2/\""
+        buildConfigField "String", "FOURSQUARE_BASE_URL", "\"https://api.foursquare.com/v3/\""
     }
     buildTypes {
         release {
@@ -29,20 +34,81 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
-    androidTestImplementation "androidx.test:runner:1.2.0"
-    androidTestImplementation "androidx.test.ext:junit:1.1.1"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.2.0"
+    def dependencies = rootProject.ext
 
-    testImplementation "junit:junit:4.13"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
 
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:1.1.0"
-    implementation "androidx.core:core-ktx:1.1.0"
-    
-    implementation "com.squareup.retrofit2:retrofit:2.7.1"
-    implementation "com.squareup.retrofit2:converter-moshi:2.7.1"
+    implementation(
+
+            dependencies.uiDependencies.material,
+            dependencies.uiDependencies.navigationFragment,
+            dependencies.uiDependencies.navigationUI,
+            dependencies.uiDependencies.fragment,
+            dependencies.uiDependencies.constraintLayout,
+            dependencies.uiDependencies.androidLegacy,
+            dependencies.uiDependencies.appCompat,
+            dependencies.uiDependencies.loadingButton,
+            dependencies.uiDependencies.shimmer,
+
+            dependencies.appDependencies.androidKtx,
+            dependencies.appDependencies.daggerHiltAndroid,
+            dependencies.appDependencies.coroutines,
+            dependencies.appDependencies.coroutinesAndroid,
+            dependencies.appDependencies.kotlinDependency,
+            dependencies.appDependencies.timber,
+
+            dependencies.remoteDependencies.gson,
+            dependencies.remoteDependencies.retrofit,
+            dependencies.remoteDependencies.retrofitConversion,
+            dependencies.remoteDependencies.okHttpLoggingInterceptor,
+            dependencies.remoteDependencies.okHttp,
+            dependencies.remoteDependencies.moshi,
+            dependencies.remoteDependencies.moshiKotlin,
+            dependencies.remoteDependencies.moshiConverter,
+            dependencies.remoteDependencies.coroutinesAdapter
+    )
+
+    kapt(
+            dependencies.appDependencies.daggerXcompiler,
+            dependencies.appDependencies.daggerCompiler,
+    )
+
+    testImplementation(
+            dependencies.testDependencies.jUnit,
+            dependencies.testDependencies.mockk,
+            dependencies.testDependencies.mockitoCore,
+            dependencies.testDependencies.hamCrest,
+            dependencies.testDependencies.archCoreTest,
+            dependencies.testDependencies.hamCrest,
+            dependencies.testDependencies.archCoreTest,
+            dependencies.testDependencies.coroutinesAndroidTest,
+            dependencies.testDependencies.coroutinesTest,
+            dependencies.testDependencies.jUnitX,
+            dependencies.testDependencies.androidCoreTest,
+            dependencies.testDependencies.truth,
+            dependencies.testDependencies.mockitoKotlin
+    )
+
+    androidTestImplementation(
+            dependencies.testDependencies.espressoCore,
+            dependencies.testDependencies.testRule,
+            dependencies.testDependencies.testRunner,
+    )
 }

@@ -6,6 +6,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Test
+import timber.log.Timber
 
 class PlacesUnitTest {
     @Test
@@ -14,14 +15,15 @@ class PlacesUnitTest {
             .setLatitudeLongitude(52.376510, 4.905890)
             .build()
         val response = PlacesService.instance
-            .getVenueRecommendations(query)
+            .getPlaceRecommendation(query)
             .execute()
 
         val errorBody = response.errorBody()
+        Timber.d(errorBody?.string())
         assertNull("Received an error: ${errorBody?.string()}", errorBody)
 
         val responseWrapper = response.body()
+        Timber.d(responseWrapper.toString())
         assertNotNull("Response is null.", responseWrapper)
-        assertEquals("Response code", 200, responseWrapper!!.meta.code)
     }
 }
