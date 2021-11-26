@@ -1,1 +1,1 @@
-# Foursquare
+# Foursquare API Android demo app
