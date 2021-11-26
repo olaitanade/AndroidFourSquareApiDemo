@@ -28,6 +28,7 @@ class PlacesRecommendationViewModel @Inject constructor(
 
     fun search() {
         currentPage = 1
+        canFetchMore = null
         _places.value = ResponseResource.Loading
         viewModelScope.launch(responseErrorHandler) {
             val result = repository.searchPlace(query.build())
@@ -43,13 +44,14 @@ class PlacesRecommendationViewModel @Inject constructor(
     }
 
     fun nextPage(long: Double, lat: Double) {
-        val nextPageQuery = VenueRecommendationsQueryBuilder()
+        query
             .setLatitudeLongitude(lat,long)
             .setCursor(canFetchMore)
 
+        canFetchMore = null
         _places.value = ResponseResource.Loading
         viewModelScope.launch(responseErrorHandler) {
-            val result = repository.searchPlace(nextPageQuery.build())
+            val result = repository.searchPlace(query.build())
             result?.let {
                 currentPage++
                 _places.value = ResponseResource.Success(it.results)

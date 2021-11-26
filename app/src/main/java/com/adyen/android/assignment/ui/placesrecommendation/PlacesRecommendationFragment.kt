@@ -124,7 +124,7 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
             this@PlacesRecommendationFragment.lifecycle
         ) { newText ->
             newText?.let {
-                getLocationPlaces(it)
+                getLocationPlaces(searchQuery = it)
             }
         })
 

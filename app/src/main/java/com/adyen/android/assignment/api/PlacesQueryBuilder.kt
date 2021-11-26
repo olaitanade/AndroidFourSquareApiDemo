@@ -10,7 +10,7 @@ abstract class PlacesQueryBuilder {
         mapOf(
             "client_id" to BuildConfig.CLIENT_ID,
             "client_secret" to BuildConfig.CLIENT_SECRET,
-            "limit" to "30"
+            "limit" to "15"
         )
     }
 
