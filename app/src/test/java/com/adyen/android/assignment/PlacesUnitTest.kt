@@ -15,7 +15,7 @@ class PlacesUnitTest {
             .setLatitudeLongitude(52.376510, 4.905890)
             .build()
         val response = PlacesService.instance
-            .getPlaceRecommendation(query)
+            .getVenueRecommendations(query)
             .execute()
 
         val errorBody = response.errorBody()

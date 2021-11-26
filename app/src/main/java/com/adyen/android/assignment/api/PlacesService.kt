@@ -26,7 +26,7 @@ interface PlacesService {
     fun getVenueRecommendations(@QueryMap query: Map<String, String>): Call<ResponseWrapper<VenueRecommendationsResponse>>
 
     @GET("places/search")
-    fun getPlaceRecommendation(@QueryMap query: Map<String, String>): Call<PlaceResponse>
+    suspend fun getPlaceRecommendation(@QueryMap query: Map<String, String>): PlaceResponse
 
     companion object  {
         private val retrofit by lazy {

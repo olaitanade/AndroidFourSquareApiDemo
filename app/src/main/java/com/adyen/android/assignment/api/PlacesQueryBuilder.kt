@@ -9,7 +9,8 @@ abstract class PlacesQueryBuilder {
     private val baseQueryParams by lazy {
         mapOf(
             "client_id" to BuildConfig.CLIENT_ID,
-            "client_secret" to BuildConfig.CLIENT_SECRET
+            "client_secret" to BuildConfig.CLIENT_SECRET,
+            "limit" to "30"
         )
     }
 
