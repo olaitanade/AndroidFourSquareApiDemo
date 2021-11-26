@@ -2,4 +2,12 @@
     <string name="app_name">Android Assignment</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string-array name="sort">
+        <item>RELEVANCE</item>
+        <item>RATING</item>
+        <item>DISTANCE</item>
+        <item>POPULARITY</item>
+    </string-array>
 </resources>

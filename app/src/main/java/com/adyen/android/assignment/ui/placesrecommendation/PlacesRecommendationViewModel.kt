@@ -6,6 +6,7 @@ import com.adyen.android.assignment.api.model.places.Place
 import com.adyen.android.assignment.repository.PlaceRepository
 import com.adyen.android.assignment.util.ResponseResource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,11 +21,18 @@ class PlacesRecommendationViewModel @Inject constructor(
     private val _places = MutableLiveData<ResponseResource<List<Place>>>()
     val places: LiveData<ResponseResource<List<Place>>> = _places
 
+    private val responseErrorHandler = CoroutineExceptionHandler { _, throwable ->
+        _places.value = ResponseResource.Error(throwable.message)
+    }
+
     fun search() {
         _places.value = ResponseResource.Loading
-        viewModelScope.launch {
+        viewModelScope.launch(responseErrorHandler) {
             val result = repository.searchPlace(query.build())
-            _places.value = ResponseResource.Success(result.results)
+            result?.let {
+                _places.value = ResponseResource.Success(it.results)
+            }
+
         }
     }
 

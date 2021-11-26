@@ -22,6 +22,7 @@ import com.adyen.android.assignment.R
 import com.adyen.android.assignment.api.VenueRecommendationsQueryBuilder
 import com.adyen.android.assignment.databinding.FragmentPlacesRecommendationBinding
 import com.adyen.android.assignment.ui.placesrecommendation.adapters.PlacesAdapter
+import com.adyen.android.assignment.ui.placesrecommendation.filterDialog.FilterDialog
 import com.adyen.android.assignment.util.DebouncingQueryTextListener
 import com.adyen.android.assignment.util.ResponseResource
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -31,7 +32,7 @@ import timber.log.Timber
 
 
 @AndroidEntryPoint
-class PlacesRecommendationFragment : Fragment() {
+class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
 
     private var _binding: FragmentPlacesRecommendationBinding? = null
     private val binding get() = _binding!!
@@ -69,15 +70,23 @@ class PlacesRecommendationFragment : Fragment() {
         }
     }
 
-    private fun getLocationPlaces(searchQuery:String? = null){
+    private fun getLocationPlaces(searchQuery:String? = null,filter: Map<String,String> = placesRecommendationViewModel.query.build()){
         when {
             permissions.all {  ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED }
              -> {
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
                         location?.let {
+
                             placesRecommendationViewModel.query.setLatitudeLongitude(it.latitude, it.longitude)
                                 .setQuery(searchQuery)
+                                .setRadius(filter.get("radius"))
+                                .setSort(filter.get("sort"))
+                                .setNe(filter.get("ne"))
+                                .setSw(filter.get("sw"))
+                                .setNear(filter.get("near"))
+                                .setCategories(filter.get("categories"))
+
                             placesRecommendationViewModel.search()
                         }
 
@@ -118,6 +127,11 @@ class PlacesRecommendationFragment : Fragment() {
             placesAdapter.clear()
             getLocationPlaces()
 
+        }
+
+        binding.filter.setOnClickListener {
+            val fragmentDialog = FilterDialog.getInstance(placesRecommendationViewModel.query)
+            fragmentDialog.show(childFragmentManager, "FilterDialog")
         }
 
         getLocationPlaces()
@@ -189,5 +203,9 @@ class PlacesRecommendationFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun apply(filter: VenueRecommendationsQueryBuilder) {
+        getLocationPlaces(filter = filter.build())
     }
 }

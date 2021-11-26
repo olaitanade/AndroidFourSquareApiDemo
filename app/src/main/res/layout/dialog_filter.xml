@@ -42,110 +42,101 @@
 
             >
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormTextInputLayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Radius">
+
 
                 <EditText
                     android:id="@+id/radius"
+                    android:hint="Radius"
                     style="@style/FormEditTextStyle"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:cursorVisible="false"
-                    android:focusable="false"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:textSize="18sp" />
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormTextInputLayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="NE">
+
 
                 <EditText
                     android:id="@+id/ne"
+                    android:hint="NE"
                     style="@style/FormEditTextStyle"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:cursorVisible="false"
-                    android:focusable="false"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:textSize="18sp" />
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormTextInputLayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="SW">
+
 
                 <EditText
                     android:id="@+id/sw"
+                    android:hint="SW"
                     style="@style/FormEditTextStyle"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:cursorVisible="false"
-                    android:focusable="false"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:textSize="18sp" />
-            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormTextInputLayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Near">
+
 
                 <EditText
                     android:id="@+id/near"
+                    android:hint="Near"
                     style="@style/FormEditTextStyle"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:cursorVisible="false"
-                    android:focusable="false"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:textSize="18sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
 
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/FormTextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Sort">
+                android:hint="Sort"
+                >
+
+
 
                 <EditText
                     android:id="@+id/sort"
                     style="@style/FormEditTextStyle"
-                    android:layout_height="60dp"
-                    android:cursorVisible="false"
+                    android:layout_height="40dp"
                     android:focusable="false"
+                    android:cursorVisible="false"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:textSize="18sp" />
+
+                <Spinner
+                    android:id="@+id/sortSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@null"
+                    android:entries="@array/sort"
+                    android:gravity="bottom"
+                    android:visibility="invisible" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormTextInputLayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Categories">
+
 
                 <EditText
                     android:id="@+id/categories"
+                    android:hint="Categories"
                     style="@style/FormEditTextStyle"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:cursorVisible="false"
-                    android:focusable="false"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:textSize="18sp" />
-            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </ScrollView>
 

@@ -1,6 +1,7 @@
 package com.adyen.android.assignment.api
 
 import android.os.Parcelable
+import com.adyen.android.assignment.api.model.places.PlaceSort
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -27,49 +28,53 @@ class VenueRecommendationsQueryBuilder : PlacesQueryBuilder() , Parcelable{
         return this
     }
 
-    fun setRadius(radius:String): VenueRecommendationsQueryBuilder {
+    fun setRadius(radius:String?): VenueRecommendationsQueryBuilder {
         this.radius = radius
         return this
     }
 
-    fun setCategories(categories:String): VenueRecommendationsQueryBuilder {
+    fun setCategories(categories:String?): VenueRecommendationsQueryBuilder {
         this.categories = categories
         return this
     }
 
-    fun setChain(chains:String): VenueRecommendationsQueryBuilder {
+    fun setChain(chains:String?): VenueRecommendationsQueryBuilder {
         this.chains = chains
         return this
     }
 
-    fun setExcludeChains(excludeChains:String): VenueRecommendationsQueryBuilder {
+    fun setExcludeChains(excludeChains:String?): VenueRecommendationsQueryBuilder {
         this.excludeChains = excludeChains
         return this
     }
 
-    fun setField(fields:String): VenueRecommendationsQueryBuilder {
+    fun setField(fields:String?): VenueRecommendationsQueryBuilder {
         this.fields = fields
         return this
     }
 
 
-    fun setNe(ne:String): VenueRecommendationsQueryBuilder {
+    fun setNe(ne:String?): VenueRecommendationsQueryBuilder {
         this.ne = ne
         return this
     }
 
-    fun setSw(sw:String): VenueRecommendationsQueryBuilder {
+    fun setSw(sw:String?): VenueRecommendationsQueryBuilder {
         this.sw = sw
         return this
     }
 
-    fun setNear(near:String): VenueRecommendationsQueryBuilder {
+    fun setNear(near:String?): VenueRecommendationsQueryBuilder {
         this.near = near
         return this
     }
 
-    fun setSort(sort:String): VenueRecommendationsQueryBuilder {
-        this.sort  = sort
+    fun setSort(sort:String?): VenueRecommendationsQueryBuilder {
+        if(sort.isNullOrEmpty()){
+            this.sort = PlaceSort.RELEVANCE.value
+        }else{
+            this.sort = sort
+        }
         return this
     }
 
