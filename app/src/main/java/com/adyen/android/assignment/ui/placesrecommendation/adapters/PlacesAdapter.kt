@@ -9,7 +9,7 @@ import com.adyen.android.assignment.R
 import com.adyen.android.assignment.api.model.places.Place
 
 class PlacesAdapter (
-    var places: MutableList<Place> = ArrayList(),
+    var places: MutableList<Place?> = ArrayList(),
     val onItemClick: ((Place) -> Unit)
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
@@ -64,7 +64,7 @@ class PlacesAdapter (
             LOADING_TYPE -> (holder as LoadingViewHolder)
 
             PLACE_TYPE -> {
-                (holder as PlaceViewHolder).bind(places[position]!!)
+                places[position]?.let { (holder as PlaceViewHolder).bind(it) }
             }
         }
     }
@@ -80,7 +80,8 @@ class PlacesAdapter (
         fun bind(place: Place) {
             with(itemView) {
                 findViewById<TextView>(R.id.place_name).text = place.name
-
+                findViewById<TextView>(R.id.place_address).text = place.location.address
+                findViewById<TextView>(R.id.place_distance).text = "${place.distance.toString()} m"
                 setOnClickListener {
                     onItemClick(place)
                 }

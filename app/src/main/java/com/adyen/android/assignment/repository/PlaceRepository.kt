@@ -1,5 +1,6 @@
 package com.adyen.android.assignment.repository
 
+import android.net.Uri
 import com.adyen.android.assignment.api.PlacesService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,6 +23,13 @@ class PlaceRepository @Inject constructor(
             }
         }
 
-        result.getOrNull()
+        val response = result.getOrNull()
+        response?.let {
+            it.body()?.cursor = it.headers().get("Link")?.let {
+                Uri.parse(it).getQueryParameter("cursor")
+            }
+            it.body()
+        }
+
     }
 }

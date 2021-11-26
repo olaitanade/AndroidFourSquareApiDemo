@@ -142,7 +142,7 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/cancel"
+        android:id="@+id/reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -150,7 +150,7 @@
         android:layout_marginBottom="35dp"
         android:paddingHorizontal="24dp"
         android:paddingVertical="12dp"
-        android:text="Cancel"
+        android:text="Reset"
         android:textAllCaps="false"
         android:textColor="@color/textDark"
         android:textSize="13sp"
@@ -174,5 +174,5 @@
         android:textStyle="bold"
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/cancel" />
+        app:layout_constraintBottom_toBottomOf="@id/reset" />
 </androidx.constraintlayout.widget.ConstraintLayout>

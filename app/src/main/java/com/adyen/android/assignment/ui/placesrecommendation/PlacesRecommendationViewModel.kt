@@ -17,6 +17,7 @@ class PlacesRecommendationViewModel @Inject constructor(
 ): ViewModel() {
 
     var currentPage = 1
+    var canFetchMore: String? = null
     var query = VenueRecommendationsQueryBuilder()
     private val _places = MutableLiveData<ResponseResource<List<Place>>>()
     val places: LiveData<ResponseResource<List<Place>>> = _places
@@ -26,11 +27,35 @@ class PlacesRecommendationViewModel @Inject constructor(
     }
 
     fun search() {
+        currentPage = 1
         _places.value = ResponseResource.Loading
         viewModelScope.launch(responseErrorHandler) {
             val result = repository.searchPlace(query.build())
             result?.let {
                 _places.value = ResponseResource.Success(it.results)
+                it.cursor?.let {
+                    canFetchMore = it
+                }
+
+            }
+
+        }
+    }
+
+    fun nextPage(long: Double, lat: Double) {
+        val nextPageQuery = VenueRecommendationsQueryBuilder()
+            .setLatitudeLongitude(lat,long)
+            .setCursor(canFetchMore)
+
+        _places.value = ResponseResource.Loading
+        viewModelScope.launch(responseErrorHandler) {
+            val result = repository.searchPlace(nextPageQuery.build())
+            result?.let {
+                currentPage++
+                _places.value = ResponseResource.Success(it.results)
+                it.cursor?.let {
+                    canFetchMore = it
+                }
             }
 
         }

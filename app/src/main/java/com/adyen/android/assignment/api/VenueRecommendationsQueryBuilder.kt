@@ -17,6 +17,7 @@ class VenueRecommendationsQueryBuilder : PlacesQueryBuilder() , Parcelable{
     private var sw: String? = null
     private var near: String? = null
     private var sort: String? = null
+    private var cursor: String? = null
 
     fun setLatitudeLongitude(latitude: Double, longitude: Double): VenueRecommendationsQueryBuilder {
         this.latitudeLongitude = "$latitude,$longitude"
@@ -78,6 +79,11 @@ class VenueRecommendationsQueryBuilder : PlacesQueryBuilder() , Parcelable{
         return this
     }
 
+    fun setCursor(cursor:String?): VenueRecommendationsQueryBuilder {
+        this.cursor = cursor
+        return this
+    }
+
     override fun putQueryParams(queryParams: MutableMap<String, String>) {
         latitudeLongitude?.apply { queryParams["ll"] = this }
         query?.apply { queryParams["query"] = this }
@@ -90,5 +96,6 @@ class VenueRecommendationsQueryBuilder : PlacesQueryBuilder() , Parcelable{
         sort?.apply { queryParams["sort"] = this }
         fields?.apply { queryParams["fields"] = this }
         near?.apply { queryParams["near"] = this }
+        cursor?.apply { queryParams["cursor"] = this }
     }
 }

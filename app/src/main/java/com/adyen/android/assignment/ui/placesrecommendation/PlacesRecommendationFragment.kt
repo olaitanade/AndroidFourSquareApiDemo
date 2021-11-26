@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,7 +42,7 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
 
     private val placesAdapter: PlacesAdapter by lazy {
         PlacesAdapter(onItemClick = { place ->
-
+            Timber.d("Show Place Details")
         })
     }
 
@@ -70,24 +71,28 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
         }
     }
 
-    private fun getLocationPlaces(searchQuery:String? = null,filter: Map<String,String> = placesRecommendationViewModel.query.build()){
+    private fun getLocationPlaces(searchQuery:String? = null,filter: Map<String,String> = placesRecommendationViewModel.query.build(),nextPage: Boolean = false){
         when {
             permissions.all {  ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED }
              -> {
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
                         location?.let {
+                            if(nextPage){
+                                placesRecommendationViewModel.nextPage(it.longitude,it.latitude)
+                            }else{
+                                placesRecommendationViewModel.query.setLatitudeLongitude(it.latitude, it.longitude)
+                                    .setQuery(searchQuery)
+                                    .setRadius(filter.get("radius"))
+                                    .setSort(filter.get("sort"))
+                                    .setNe(filter.get("ne"))
+                                    .setSw(filter.get("sw"))
+                                    .setNear(filter.get("near"))
+                                    .setCategories(filter.get("categories"))
 
-                            placesRecommendationViewModel.query.setLatitudeLongitude(it.latitude, it.longitude)
-                                .setQuery(searchQuery)
-                                .setRadius(filter.get("radius"))
-                                .setSort(filter.get("sort"))
-                                .setNe(filter.get("ne"))
-                                .setSw(filter.get("sw"))
-                                .setNear(filter.get("near"))
-                                .setCategories(filter.get("categories"))
+                                placesRecommendationViewModel.search()
+                            }
 
-                            placesRecommendationViewModel.search()
                         }
 
                     }
@@ -140,19 +145,34 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
     private fun setupObserver(){
         placesRecommendationViewModel.places.observe(viewLifecycleOwner,{ resource ->
             when(resource){
-                is  ResponseResource.Success -> {
+                is ResponseResource.Success -> {
                     if (placesRecommendationViewModel.currentPage == 1) {
                         placesAdapter.setData(resource.data)
                     } else {
                         placesAdapter.removeLoading()
                         placesAdapter.updateData(resource.data)
                     }
+                    binding.loading.isVisible=false
+                    binding.swipeRefresh.isRefreshing = false
                 }
                 is ResponseResource.Loading -> {
+                    if(placesAdapter.places.isNotEmpty()){
+                        placesAdapter.places.add(null)
+                        binding.placeList.post {
+                            placesAdapter.notifyItemInserted(placesAdapter.places.size - 1)
+                        }
+                    }
 
+                    binding.loading.isVisible=true
                 }
                 is ResponseResource.Error -> {
                     Timber.d(resource.exception)
+
+                    binding.loading.isVisible=false
+                    binding.swipeRefresh.isRefreshing = false
+                    if (placesAdapter.places.isNotEmpty()) {
+                        placesAdapter.removeLoading()
+                    }
                 }
             }
         })
@@ -170,14 +190,11 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
                     val lastItem = layoutManager.findLastCompletelyVisibleItemPosition()
                     val currentTotalCount = layoutManager.itemCount
 
-//                    if (!sharedViewModel.isLoading && currentTotalCount <= lastItem + visibleThreshold) {
-//                        if (sharedViewModel.shouldFetchMore()) {
-//                            sharedViewModel.searchUploaded(
-//                                search.text(),
-//                                sharedViewModel.uploadedCitizenCurrentPage + 1
-//                            )
-//                        }
-//                    }
+                    if (!binding.loading.isVisible && currentTotalCount <= lastItem + visibleThreshold) {
+                        if (!placesRecommendationViewModel.canFetchMore.isNullOrEmpty()) {
+                            getLocationPlaces(nextPage = true)
+                        }
+                    }
                 }
             }
         })

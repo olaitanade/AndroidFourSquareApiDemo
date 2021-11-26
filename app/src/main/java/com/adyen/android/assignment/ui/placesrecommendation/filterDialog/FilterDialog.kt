@@ -61,6 +61,14 @@ class FilterDialog: DialogFragment(), AdapterView.OnItemSelectedListener {
             onApply()
         }
 
+        binding.cancelIcon.setOnClickListener{
+            dismiss()
+        }
+
+        binding.reset.setOnClickListener{
+            reset()
+        }
+
         binding.sort.setOnClickListener{
             binding.sortSpinner.performClick()
         }
@@ -73,6 +81,14 @@ class FilterDialog: DialogFragment(), AdapterView.OnItemSelectedListener {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
 
+    }
+
+    private fun reset() {
+
+        val filterData = VenueRecommendationsQueryBuilder()
+
+        (requireParentFragment() as FilterListener).apply(filterData)
+        dismiss()
     }
 
     private fun onApply() {
