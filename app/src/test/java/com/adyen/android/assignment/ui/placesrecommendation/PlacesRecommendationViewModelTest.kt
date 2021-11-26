@@ -34,7 +34,7 @@ class PlacesRecommendationViewModelTest {
 
     @Test
     fun `search unsuccessful`() {
-        val query = VenueRecommendationsQueryBuilder()
+        placesRecommendationViewModel.query
             .setLatitudeLongitude(1.0,1.0)
 
 
@@ -55,10 +55,43 @@ class PlacesRecommendationViewModelTest {
         )
 
         coEvery {
-            placeRepository.searchPlace(query.build())
+            placeRepository.searchPlace(placesRecommendationViewModel.query.build())
         } returns response
 
-        placesRecommendationViewModel.search()
+       placesRecommendationViewModel.search()
+
+        val observeResult = placesRecommendationViewModel.places.value
+
+        assert(observeResult is ResponseResource.Error)
+    }
+
+    @Test
+    fun `next page unsuccessful`() {
+        placesRecommendationViewModel.query
+            .setLatitudeLongitude(1.0,1.0)
+
+
+        val response = PlaceResponse(
+            results = listOf(),
+            context = Context(
+                GeoBounds(
+                    Circle(
+                        Center(
+                            1,
+                            2
+                        ),
+                        1
+                    )
+                )
+            ),
+            cursor = "s443lk4"
+        )
+
+        coEvery {
+            placeRepository.searchPlace(placesRecommendationViewModel.query.build())
+        } returns response
+
+        placesRecommendationViewModel.nextPage(1.0,1.0)
 
         val observeResult = placesRecommendationViewModel.places.value
 
