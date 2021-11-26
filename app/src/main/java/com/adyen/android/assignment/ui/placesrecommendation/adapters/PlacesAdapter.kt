@@ -9,7 +9,7 @@ import com.adyen.android.assignment.R
 import com.adyen.android.assignment.api.model.places.Place
 
 class PlacesAdapter (
-    var places: MutableList<Place> = mutableListOf(),
+    var places: MutableList<Place> = ArrayList(),
     val onItemClick: ((Place) -> Unit)
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>()  {

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="filter"
+        android:textColor="@color/textDark"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/cancelIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:contentDescription="Cancel"
+        android:src="@drawable/ic_cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toTopOf="@id/apply">
+        <LinearLayout
+            android:id="@+id/bodyFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FCFCFC"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+
+            >
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/FormTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Radius">
+
+                <EditText
+                    android:id="@+id/radius"
+                    style="@style/FormEditTextStyle"
+                    android:layout_height="60dp"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/FormTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="NE">
+
+                <EditText
+                    android:id="@+id/ne"
+                    style="@style/FormEditTextStyle"
+                    android:layout_height="60dp"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/FormTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="SW">
+
+                <EditText
+                    android:id="@+id/sw"
+                    style="@style/FormEditTextStyle"
+                    android:layout_height="60dp"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/FormTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Near">
+
+                <EditText
+                    android:id="@+id/near"
+                    style="@style/FormEditTextStyle"
+                    android:layout_height="60dp"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/FormTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Sort">
+
+                <EditText
+                    android:id="@+id/sort"
+                    style="@style/FormEditTextStyle"
+                    android:layout_height="60dp"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/FormTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Categories">
+
+                <EditText
+                    android:id="@+id/categories"
+                    style="@style/FormEditTextStyle"
+                    android:layout_height="60dp"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="35dp"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="12dp"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/textDark"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/apply" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="30dp"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="12dp"
+        android:text="Apply"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/cancel" />
+</androidx.constraintlayout.widget.ConstraintLayout>

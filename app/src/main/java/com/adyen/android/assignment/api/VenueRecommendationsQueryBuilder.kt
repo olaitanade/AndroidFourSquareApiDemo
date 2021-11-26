@@ -1,6 +1,10 @@
 package com.adyen.android.assignment.api
 
-class VenueRecommendationsQueryBuilder : PlacesQueryBuilder() {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+class VenueRecommendationsQueryBuilder : PlacesQueryBuilder() , Parcelable{
     private var latitudeLongitude: String? = null
     private var query: String? = null
     private var radius: String? = null
@@ -18,7 +22,7 @@ class VenueRecommendationsQueryBuilder : PlacesQueryBuilder() {
         return this
     }
 
-    fun setQuery(query:String): VenueRecommendationsQueryBuilder {
+    fun setQuery(query:String?): VenueRecommendationsQueryBuilder {
         this.query = query
         return this
     }

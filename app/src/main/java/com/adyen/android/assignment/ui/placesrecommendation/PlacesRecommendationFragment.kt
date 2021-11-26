@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +22,7 @@ import com.adyen.android.assignment.R
 import com.adyen.android.assignment.api.VenueRecommendationsQueryBuilder
 import com.adyen.android.assignment.databinding.FragmentPlacesRecommendationBinding
 import com.adyen.android.assignment.ui.placesrecommendation.adapters.PlacesAdapter
+import com.adyen.android.assignment.util.DebouncingQueryTextListener
 import com.adyen.android.assignment.util.ResponseResource
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -42,6 +44,13 @@ class PlacesRecommendationFragment : Fragment() {
         })
     }
 
+    private val permissions: List<String> by lazy {
+        listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    }
+
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -49,44 +58,33 @@ class PlacesRecommendationFragment : Fragment() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         when {
-            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                // Precise location access granted.
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
+                    permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
+            -> {
                 getLocationPlaces()
 
-            }
-            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                // Only approximate location access granted.
-                getLocationPlaces()
-            } else -> {
+            }else -> {
             // No location access granted.
         }
         }
     }
 
-    private fun getLocationPlaces(){
-        when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) -> {
-                // You can use the API that requires the permission.
+    private fun getLocationPlaces(searchQuery:String? = null){
+        when {
+            permissions.all {  ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED }
+             -> {
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
-                        // Got last known location. In some rare situations this can be null.
                         location?.let {
-                            placesRecommendationViewModel.search(
-                                VenueRecommendationsQueryBuilder()
-                                    .setLatitudeLongitude(it.latitude, it.longitude)
-                                    .build()
-                            )
+                            placesRecommendationViewModel.query.setLatitudeLongitude(it.latitude, it.longitude)
+                                .setQuery(searchQuery)
+                            placesRecommendationViewModel.search()
                         }
 
                     }
 
             }
             else -> {
-                // You can directly ask for the permission.
-                // The registered ActivityResultCallback gets the result of this request.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     locationPermissionRequest.launch(arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -106,18 +104,13 @@ class PlacesRecommendationFragment : Fragment() {
         binding.placeList.apply {
             adapter = placesAdapter
         }
-        binding.search.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
 
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(text: CharSequence, p1: Int, p2: Int, p3: Int) {
-                placesAdapter.clear()
-                //sharedViewModel.searchUploaded("$text", 1)
+        binding.search.addTextChangedListener(
+            DebouncingQueryTextListener(
+            this@PlacesRecommendationFragment.lifecycle
+        ) { newText ->
+            newText?.let {
+                getLocationPlaces(it)
             }
         })
 
