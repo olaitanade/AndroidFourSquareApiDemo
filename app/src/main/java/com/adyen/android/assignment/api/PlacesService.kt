@@ -29,29 +29,4 @@ interface PlacesService {
     @GET("places/search")
     suspend fun getPlaceRecommendation(@QueryMap query: Map<String, String>): Response<PlaceResponse>
 
-    companion object  {
-        private val retrofit by lazy {
-            val chainInterceptor = { chain: Interceptor.Chain ->
-                chain.proceed(
-                    chain.request().newBuilder()
-                        .header("Content-Type", "application/json")
-                        .header("Accept", "application/json")
-                        .header("Authorization", BuildConfig.API_KEY)
-                        .build()
-                )
-            }
-            val client = OkHttpClient.Builder()
-                .addInterceptor(chainInterceptor)
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .build()
-
-            Retrofit.Builder()
-                .baseUrl(BuildConfig.FOURSQUARE_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build()
-        }
-
-        val instance: PlacesService by lazy { retrofit.create(PlacesService::class.java) }
-    }
 }
