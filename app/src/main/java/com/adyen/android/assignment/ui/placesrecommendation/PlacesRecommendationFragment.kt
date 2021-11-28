@@ -210,7 +210,7 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
     }
 
     override fun apply(filter: VenueRecommendationsQueryBuilder) {
-        getLocationPlaces(filter = filter.build())
+        getLocationPlaces(searchQuery = binding.search.text.toString(),filter = filter.build())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
