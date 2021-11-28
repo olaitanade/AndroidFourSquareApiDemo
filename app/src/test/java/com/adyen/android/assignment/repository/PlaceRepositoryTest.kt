@@ -11,11 +11,17 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody.Companion.toResponseBody
+import org.apache.http.params.HttpParams
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import retrofit2.HttpException
 
 
 @RunWith(JUnit4::class)
@@ -61,6 +67,24 @@ class PlaceRepositoryTest {
         val result = placeRepository.searchPlace(FakeDataSource.query.build())
 
         assert((result as PlaceResponse).cursor == null)
+    }
+
+    @Test
+    fun `search unsuccessful`() = runBlocking {
+
+        coEvery {
+            placesService.getPlaceRecommendation(FakeDataSource.query.build())
+        } throws HttpException(FakeDataSource.serviceResponseError)
+
+
+        val result = Assert.assertThrows(Exception::class.java) {
+            runBlocking {
+                placeRepository.searchPlace(FakeDataSource.query.build())
+            }
+        }
+
+        Assert.assertEquals(result.localizedMessage,"HTTP 400 Response.error()")
+
     }
 
 }
