@@ -8,6 +8,7 @@ import com.adyen.android.assignment.util.ResponseResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -23,6 +24,7 @@ class PlacesRecommendationViewModel @Inject constructor(
     val places: LiveData<ResponseResource<List<Place>>> = _places
 
     private val responseErrorHandler = CoroutineExceptionHandler { _, throwable ->
+        Timber.d(throwable.message)
         _places.value = ResponseResource.Error(throwable.message)
     }
 
