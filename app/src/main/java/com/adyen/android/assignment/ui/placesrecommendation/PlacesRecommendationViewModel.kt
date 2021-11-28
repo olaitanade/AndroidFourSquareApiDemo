@@ -29,8 +29,11 @@ class PlacesRecommendationViewModel @Inject constructor(
     }
 
     fun search() {
+
         currentPage = 1
         canFetchMore = null
+        query.setCursor(null)
+
         _places.value = ResponseResource.Loading
         viewModelScope.launch(responseErrorHandler) {
             val result = repository.searchPlace(query.build())

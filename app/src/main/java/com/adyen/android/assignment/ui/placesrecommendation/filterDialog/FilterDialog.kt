@@ -14,16 +14,17 @@ import com.adyen.android.assignment.databinding.DialogFilterBinding
 import timber.log.Timber
 
 class FilterDialog: DialogFragment(), AdapterView.OnItemSelectedListener {
+
     private var _binding: DialogFilterBinding? = null
     private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = DialogFilterBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onStart() {
@@ -72,6 +73,7 @@ class FilterDialog: DialogFragment(), AdapterView.OnItemSelectedListener {
         binding.sort.setOnClickListener{
             binding.sortSpinner.performClick()
         }
+
         binding.sortSpinner.onItemSelectedListener = this
         binding.sortSpinner.adapter = ArrayAdapter<String>(
             requireContext(),
@@ -84,7 +86,6 @@ class FilterDialog: DialogFragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun reset() {
-
         val filterData = VenueRecommendationsQueryBuilder()
 
         (requireParentFragment() as FilterListener).apply(filterData)

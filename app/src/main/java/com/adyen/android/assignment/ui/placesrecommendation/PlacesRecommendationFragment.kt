@@ -71,24 +71,29 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
         }
     }
 
-    private fun getLocationPlaces(searchQuery:String? = null,filter: Map<String,String> = placesRecommendationViewModel.query.build(),nextPage: Boolean = false){
+    private fun getLocationPlaces(
+        searchQuery:String? = null,
+        filter: Map<String,String> = placesRecommendationViewModel.query.build(),
+        nextPage: Boolean = false){
+
         when {
             permissions.all {  ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED }
              -> {
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
                         location?.let {
+
                             if(nextPage){
                                 placesRecommendationViewModel.nextPage(it.longitude,it.latitude)
                             }else{
                                 placesRecommendationViewModel.query.setLatitudeLongitude(it.latitude, it.longitude)
                                     .setQuery(searchQuery)
-                                    .setRadius(filter.get("radius"))
-                                    .setSort(filter.get("sort"))
-                                    .setNe(filter.get("ne"))
-                                    .setSw(filter.get("sw"))
-                                    .setNear(filter.get("near"))
-                                    .setCategories(filter.get("categories"))
+                                    .setRadius(filter["radius"])
+                                    .setSort(filter["sort"])
+                                    .setNe(filter["ne"])
+                                    .setSw(filter["sw"])
+                                    .setNear(filter["near"])
+                                    .setCategories(filter["categories"])
 
                                 placesRecommendationViewModel.search()
                             }
@@ -113,20 +118,24 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
 
         setupScrollListener()
         setupObserver()
+        initialize()
+    }
 
-
+    private fun initialize(){
         binding.placeList.apply {
             adapter = placesAdapter
         }
 
         binding.search.addTextChangedListener(
             DebouncingQueryTextListener(
-            this@PlacesRecommendationFragment.lifecycle
-        ) { newText ->
-            newText?.let {
-                getLocationPlaces(searchQuery = it)
-            }
-        })
+                this@PlacesRecommendationFragment.lifecycle
+            ) { newText ->
+
+                newText?.let {
+                    getLocationPlaces(searchQuery = it)
+                }
+
+            })
 
         binding.swipeRefresh.setOnRefreshListener {
             placesAdapter.clear()
@@ -200,11 +209,13 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
         })
     }
 
+    override fun apply(filter: VenueRecommendationsQueryBuilder) {
+        getLocationPlaces(filter = filter.build())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-
     }
 
     override fun onCreateView(
@@ -222,7 +233,5 @@ class PlacesRecommendationFragment : Fragment(), FilterDialog.FilterListener {
         _binding = null
     }
 
-    override fun apply(filter: VenueRecommendationsQueryBuilder) {
-        getLocationPlaces(filter = filter.build())
-    }
+
 }
