@@ -118,4 +118,6 @@ dependencies {
             dependencies.testDependencies.testRule,
             dependencies.testDependencies.testRunner,
     )
+
+    testImplementation "org.robolectric:robolectric:4.7.2"
 }

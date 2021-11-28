@@ -1,6 +1,8 @@
 package com.adyen.android.assignment.util
 
+import com.adyen.android.assignment.api.VenueRecommendationsQueryBuilder
 import com.adyen.android.assignment.api.model.places.*
+import retrofit2.Response
 
 object FakeDataSource {
 
@@ -34,4 +36,11 @@ object FakeDataSource {
             )
         )
     )
+
+    val query = VenueRecommendationsQueryBuilder()
+        .setLatitudeLongitude(52.376510, 4.905890)
+
+    val serviceResponse = Response.success(successfulPlaceResponse)
+    val serviceResponseWithoutCursor = Response.success(successfulPlaceResponseWithoutLink)
+
 }
