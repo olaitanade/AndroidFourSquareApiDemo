@@ -28,42 +28,54 @@ class CashRegister(private val change: Change) {
         //add the amountPaid to the Cash Register
         change.addChange(amountPaid)
 
-        when{
+        return when{
+
             totalChangeToGive > change.total -> {
                 change.removeChange(amountPaid)
                 throw TransactionException(INSUFFICIENT_CHANGE)
             }
+
             totalChangeToGive == change.total -> {
                 customerChange = change
                 change.clear()
-                return customerChange
+                customerChange
             }
+
             else -> {
-
-                change.getElements().forEach {
-                    if(totalChangeToGive>=it.minorValue){
-                        val changeCountPossible = (totalChangeToGive / it.minorValue).toInt()
-                        val changeCountAvailable = change.getCount(it)
-
-                        val totalChangeCount: Int =
-                            if (changeCountAvailable <= changeCountPossible) changeCountAvailable else changeCountPossible
-                        val totalChangeAmount: Long = (totalChangeCount * it.minorValue).toLong()
-
-                        customerChange.add(it,totalChangeCount)
-                        totalChangeToGive -= totalChangeAmount
-                    }
-
-                }
-
-                if(totalChangeToGive>0) {
-                    change.removeChange(amountPaid)
-                    throw TransactionException(INSUFFICIENT_CHANGE)
-                }
-
-                change.removeChange(customerChange)
-                return customerChange
+                calculateChange(amountPaid,totalChangeToGive,customerChange)
             }
+
         }
+    }
+
+    private fun calculateChange(
+        amountPaid: Change,
+        totalChangeToGiveParam: Long,
+        customerChange: Change
+    ):Change{
+        var totalChangeToGive = totalChangeToGiveParam
+        change.getElements().forEach {
+            if(totalChangeToGive>=it.minorValue){
+                val changeCountPossible = (totalChangeToGive / it.minorValue).toInt()
+                val changeCountAvailable = change.getCount(it)
+
+                val totalChangeCount: Int =
+                    if (changeCountAvailable <= changeCountPossible) changeCountAvailable else changeCountPossible
+                val totalChangeAmount: Long = (totalChangeCount * it.minorValue).toLong()
+
+                customerChange.add(it,totalChangeCount)
+                totalChangeToGive -= totalChangeAmount
+            }
+
+        }
+
+        if(totalChangeToGive>0) {
+            change.removeChange(amountPaid)
+            throw TransactionException(INSUFFICIENT_CHANGE)
+        }
+
+        change.removeChange(customerChange)
+        return customerChange
     }
 
     class TransactionException(message: String, cause: Throwable? = null) : Exception(message, cause)
